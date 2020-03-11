@@ -29,7 +29,12 @@ namespace VacuumMoldMac
                 var h = 44 + 200 * r.NextDouble ();
                 var f = new CGRect (x, y, w, h);
                 var mold = new Mold ();
-                mold.Shape = new Box (f);
+                if (r.NextDouble () < 0.5) {
+                    mold.Shape = new Oval (f);
+                }
+                else {
+                    mold.Shape = new Box (f);
+                }
                 chamber.AddMold (mold);
             }
 
