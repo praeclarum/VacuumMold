@@ -42,13 +42,13 @@ namespace VacuumMold
             moldsNode.AddChildNode (SCNNode.FromGeometry (SCNSphere.Create (50)));
             Scene = scene;
 
-            UpdateCameraAfterResize ();
+            UpdateCamera ();
         }
 
         public override void Layout ()
         {
             base.Layout ();
-            UpdateCameraAfterResize ();
+            UpdateCamera ();
         }
 
         public void AddMold (Mold mold)
@@ -60,16 +60,18 @@ namespace VacuumMold
         {
         }
 
-        void UpdateCameraAfterResize ()
+        void UpdateCamera ()
         {
             var depth = (double)camNode.Position.Z;
-            var height = Bounds.Height;
+            var bounds = Bounds;
+            var height = bounds.Height;
             if (height < 1)
                 return;
 
             var fovyRads = 2.0 * Math.Atan2 (height / 2, depth);
             var fovy = fovyRads * 180.0 / Math.PI;
             camNode.Camera.YFov = fovy;
+            camNode.Position = new SCNVector3 (bounds.Width / 2, bounds.Height / 2, (nfloat)depth);
         }
     }
 }
