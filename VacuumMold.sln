@@ -1,0 +1,28 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacuumMold", "VacuumMold\VacuumMold.csproj", "{5E36F192-6CC9-4C08-9E66-FD3B23D4BDD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{4920625C-FA30-4580-8561-7EE3A172237C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacuumMoldMac", "Samples\VacuumMoldMac\VacuumMoldMac.csproj", "{393F37AC-A79E-409A-8FA0-A2EDAF86D617}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E36F192-6CC9-4C08-9E66-FD3B23D4BDD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E36F192-6CC9-4C08-9E66-FD3B23D4BDD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E36F192-6CC9-4C08-9E66-FD3B23D4BDD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E36F192-6CC9-4C08-9E66-FD3B23D4BDD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393F37AC-A79E-409A-8FA0-A2EDAF86D617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393F37AC-A79E-409A-8FA0-A2EDAF86D617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393F37AC-A79E-409A-8FA0-A2EDAF86D617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393F37AC-A79E-409A-8FA0-A2EDAF86D617}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{393F37AC-A79E-409A-8FA0-A2EDAF86D617} = {4920625C-FA30-4580-8561-7EE3A172237C}
+	EndGlobalSection
+EndGlobal
