@@ -27,6 +27,7 @@ namespace VacuumMold
                 Xy (Frame.X + Frame.Width, Frame.Y),
                 Xy (Frame.X + Frame.Width, Frame.Y + Frame.Height),
                 Xy (Frame.X, Frame.Y + Frame.Height),
+                Xy (Frame.X, Frame.Y),
             };
         }
     }
