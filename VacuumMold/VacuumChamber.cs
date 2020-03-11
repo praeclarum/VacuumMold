@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using AppKit;
 using CoreGraphics;
 using Foundation;
@@ -10,6 +11,9 @@ namespace VacuumMold
     [Register ("VacuumChamber")]
     public class VacuumChamber : SCNView
     {
+        readonly SCNScene scene = SCNScene.Create ();
+
+
         public VacuumChamber (CGRect frame)
             : base (frame) => Initialize ();
         public VacuumChamber (NSCoder coder)
@@ -22,6 +26,15 @@ namespace VacuumMold
         void Initialize ()
         {
             BackgroundColor = NSColor.Black;
+        }
+
+        public void AddMold (Mold mold)
+        {
+            scene.RootNode.AddChildNode (mold.Node);
+        }
+
+        public void RemoveMold (Mold mold)
+        {
         }
     }
 }

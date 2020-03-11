@@ -15,6 +15,11 @@ namespace VacuumMold
     {
         public CGRect Frame { get; set; }
 
+        public Box (CGRect frame)
+        {
+            Frame = frame;
+        }
+
         public override Vector2[] SamplePerimeter (float tolerance)
         {
             return new[] {

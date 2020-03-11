@@ -1,7 +1,9 @@
 ﻿using System;
 
 using AppKit;
+using CoreGraphics;
 using Foundation;
+using VacuumMold;
 
 namespace VacuumMoldMac
 {
@@ -14,6 +16,22 @@ namespace VacuumMoldMac
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            var r = new Random ();
+            var n = 10 + r.Next (10);
+
+            var b = chamber.Bounds;
+
+            for (var i = 0; i < n; i++) {
+                var x = b.Width * r.NextDouble ();
+                var y = b.Height * r.NextDouble ();
+                var w = 44 + 200 * r.NextDouble ();
+                var h = 44 + 200 * r.NextDouble ();
+                var f = new CGRect (x, y, w, h);
+                var mold = new Mold ();
+                mold.Shape = new Box (f);
+                chamber.AddMold (mold);
+            }
 
             // Do any additional setup after loading the view.
         }
