@@ -165,6 +165,52 @@ namespace VacuumMold
                 }
             }
 
+            //
+            // Create the outer crease
+            //
+            var creaseLineSegments = new List<ushort> ();
+            var creaseSharpnesses = new List<float> ();
+            for (var i = 0; i <= opoly.Points.Count; i++) {
+                var op = opoly.Points[i % opoly.Points.Count];
+                var overt = opointToVertex[op.VertexCode];
+                if (i > 0) {
+                    creaseSharpnesses.Add (5f);
+                    creaseLineSegments.Add (lastOVert);
+                    creaseLineSegments.Add (overt);
+                }
+                lastOVert = overt;
+            }
+            for (var i = 0; i <= ipoly.Points.Count; i++) {
+                var ip = ipoly.Points[i % ipoly.Points.Count];
+                var ivert = ipointToVertex[ip.VertexCode];
+                if (i > 0) {
+                    creaseSharpnesses.Add (5f);
+                    creaseLineSegments.Add (lastIVert);
+                    creaseLineSegments.Add (ivert);
+                }
+                lastIVert = ivert;
+            }
+
+            SCNGeometryElement celem;
+            unsafe {
+                var n = creaseLineSegments.Count;
+                var ar = creaseLineSegments.ToArray ();
+                fixed (ushort* p = ar) {
+                    var data = NSData.FromBytes ((IntPtr)p, (nuint)(n * 2));
+                    celem = SCNGeometryElement.FromData (data, SCNGeometryPrimitiveType.Line, n / 2, 2);
+                }
+            }
+            SCNGeometrySource csource;
+            unsafe {
+                Console.WriteLine (creaseSharpnesses);
+                var n = creaseSharpnesses.Count;
+                var ar = creaseSharpnesses.ToArray ();
+                fixed (float* p = ar) {
+                    var data = NSData.FromBytes ((IntPtr)p, (nuint)(n * 4));
+                    csource = SCNGeometrySource.FromData (data,
+                        SCNGeometrySourceSemantics.EdgeCrease, n, true, 1, 4, 0, 4);
+                }
+            }
 
             //
             // Create the geometry
@@ -173,7 +219,7 @@ namespace VacuumMold
                 SCNGeometrySource.FromVertices (verts.ToArray ()),
             };
             var elements = new[] {
-                oelem, ielem, welem,
+                oelem, ielem, welem
             };
             var g = SCNGeometry.Create (sources, elements.ToArray ());
 
@@ -184,6 +230,11 @@ namespace VacuumMold
             var wmat = Materials.Gold(roughness: 0.1).SCNMaterial;
 
             g.Materials = new[] { omat, imat, wmat };
+
+            g.EdgeCreasesElement = celem;
+            g.EdgeCreasesSource = csource;
+            g.SubdivisionLevel = 4;
+
             return g;
         }
     }
