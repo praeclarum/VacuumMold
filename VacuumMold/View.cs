@@ -8,13 +8,15 @@ using System.Runtime.InteropServices;
 using Foundation;
 using AppKit;
 
+using static VacuumMold.Helpers;
+
 namespace VacuumMold
 {
-    public class Mold
+    public class View
     {
-        private Shape? shape;
-
         public SCNNode Node { get; }
+
+        private Shape? shape;
 
         public Shape? Shape {
             get => shape;
@@ -32,9 +34,9 @@ namespace VacuumMold
         }
 
         float pad = 16.0f;
-        float depth = 16.0f;
+        float elevation = 16.0f;
 
-        public Mold ()
+        public View ()
         {
             Node = SCNNode.Create ();
         }
@@ -56,17 +58,21 @@ namespace VacuumMold
             //
             // Tesselate the outer element
             //
-            var oframe = new CoreGraphics.CGRect (minx - pad, miny - pad, (maxx - minx) + 2 * pad, (maxy - miny) + 2 * pad);
-            var oshapePoints = new Box (oframe).SamplePerimeter(1);
+            var osize = Xy ((maxx - minx) + 2 * pad, (maxy - miny) + 2 * pad);
+            var oshapePoints = new Box (osize).SamplePerimeter (1);
             var opoly = new Poly2Tri.Triangulation.Polygon.Polygon (
                 from p in oshapePoints
                 select new Poly2Tri.Triangulation.Polygon.PolygonPoint (p.X, p.Y));
             opoly.AddHole (ipoly);
 
             //
-            // Create the outer element
+            // Triangulate the outer polygon (with the hole in it)
             //
             Poly2Tri.P2T.Triangulate (opoly);
+
+            //
+            // Build a lookup table to go from vertex code to vertex index
+            //
             var opoints = opoly.Triangles.SelectMany (x => x.Points).Distinct ().ToList ();
             var opointToVertex = new Dictionary<uint, ushort> ();
             for (var i = 0; i < opoints.Count; i++) {
@@ -98,7 +104,7 @@ namespace VacuumMold
             for (var i = 0; i < ipoints.Count; i++) {
                 ipointToVertex[ipoints[i].VertexCode] = (ushort)(i + verts.Count);
             }
-            verts.AddRange (ipoints.Select (x => new SCNVector3 ((nfloat)x.X, (nfloat)x.Y, depth)));
+            verts.AddRange (ipoints.Select (x => new SCNVector3 ((nfloat)x.X, (nfloat)x.Y, elevation)));
             var itris = new List<ushort> ();
             foreach (var t in ipoly.Triangles) {
                 foreach (var p in t.Points) {

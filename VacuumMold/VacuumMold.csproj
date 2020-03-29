@@ -65,7 +65,7 @@
     <Compile Include="VacuumChamber.cs" />
     <Compile Include="Shape.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="Mold.cs" />
+    <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Poly2Tri.NetStandard">

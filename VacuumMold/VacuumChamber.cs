@@ -13,7 +13,7 @@ namespace VacuumMold
     {
         readonly SCNScene scene = SCNScene.Create ();
 
-        readonly SCNNode moldsNode = SCNNode.Create ();
+        readonly SCNNode viewsNode = SCNNode.Create ();
 
         readonly SCNNode camNode = new SCNNode {
             Camera = new SCNCamera {
@@ -38,8 +38,15 @@ namespace VacuumMold
             BackgroundColor = NSColor.Black;
             var root = scene.RootNode;
             root.AddChildNode (camNode);
-            root.AddChildNode (moldsNode);
-            moldsNode.AddChildNode (SCNNode.FromGeometry (SCNSphere.Create (50)));
+            root.AddChildNode (viewsNode);
+            viewsNode.AddChildNode (SCNNode.FromGeometry (SCNSphere.Create (50)));
+
+            AllowsCameraControl = true;
+
+            scene.Background.ContentImage = new NSImage (
+                NSBundle.MainBundle.PathForResource ("environment", "jpg"));
+            scene.Background.ContentsTransform = SCNMatrix4.CreateRotationX ((float)(Math.PI / 2));
+
             Scene = scene;
 
             UpdateCamera ();
@@ -51,12 +58,12 @@ namespace VacuumMold
             UpdateCamera ();
         }
 
-        public void AddMold (Mold mold)
+        public void AddMold (View mold)
         {
-            moldsNode.AddChildNode (mold.Node);
+            viewsNode.AddChildNode (mold.Node);
         }
 
-        public void RemoveMold (Mold mold)
+        public void RemoveMold (View mold)
         {
         }
 

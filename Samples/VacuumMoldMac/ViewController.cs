@@ -5,6 +5,8 @@ using CoreGraphics;
 using Foundation;
 using VacuumMold;
 
+using static VacuumMold.Helpers;
+
 namespace VacuumMoldMac
 {
     public partial class ViewController : NSViewController
@@ -17,6 +19,9 @@ namespace VacuumMoldMac
         {
             base.ViewDidLoad();
 
+            //
+            // Generating test views
+            //
             var r = new Random ();
             var n = 10 + r.Next (10);
 
@@ -25,32 +30,19 @@ namespace VacuumMoldMac
             for (var i = 0; i < n; i++) {
                 var x = b.Width * r.NextDouble ();
                 var y = b.Height * r.NextDouble ();
-                var w = 44 + 200 * r.NextDouble ();
-                var h = 44 + 200 * r.NextDouble ();
+                var w = b.Width * 0.1f * r.NextDouble ();
+                var h = b.Height * 0.1f * r.NextDouble ();
                 var f = new CGRect (x, y, w, h);
-                var mold = new Mold ();
+                var view = new View ();
                 if (r.NextDouble () < 0.5) {
-                    mold.Shape = new Oval (f);
+                    view.Shape = new Oval (Xy (w, h));
+                    view.Position = Xyz (x, y, 0);
                 }
                 else {
-                    mold.Shape = new Box (f);
+                    view.Shape = new Box (Xy (w, h));
+                    view.Position = Xyz (x, y, 0);
                 }
-                chamber.AddMold (mold);
-            }
-
-            // Do any additional setup after loading the view.
-        }
-
-        public override NSObject RepresentedObject
-        {
-            get
-            {
-                return base.RepresentedObject;
-            }
-            set
-            {
-                base.RepresentedObject = value;
-                // Update the view, if already loaded.
+                chamber.AddMold (view);
             }
         }
     }
