@@ -30,8 +30,8 @@ namespace VacuumMoldMac
             for (var i = 0; i < n; i++) {
                 var x = b.Width * r.NextDouble ();
                 var y = b.Height * r.NextDouble ();
-                var w = b.Width * 0.1f * r.NextDouble ();
-                var h = b.Height * 0.1f * r.NextDouble ();
+                var w = b.Width * 0.3f * r.NextDouble ();
+                var h = b.Height * 0.3f * r.NextDouble ();
                 var f = new CGRect (x, y, w, h);
                 var view = new View ();
                 if (r.NextDouble () < 0.5) {

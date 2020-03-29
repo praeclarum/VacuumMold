@@ -18,7 +18,7 @@ namespace VacuumMold
 
         private Shape? shape;
 
-        private Material backgroundMaterial = Materials.Plastic (Xyzw (1.0, 1.0, 1.0, 1), roughness: 0.1);
+        private Material backgroundMaterial = Materials.Plastic (Xyzw (1.0, 0.8, 0.8, 1), roughness: 0.1);
         public Material BackgroundMaterial {
             get => backgroundMaterial;
             set => backgroundMaterial = value; }
@@ -77,7 +77,7 @@ namespace VacuumMold
             Poly2Tri.P2T.Triangulate (opoly);
 
             //
-            // Build a lookup table to go from vertex code to vertex index
+            // Create the outer element
             //
             var opoints = opoly.Triangles.SelectMany (x => x.Points).Distinct ().ToList ();
             var opointToVertex = new Dictionary<uint, ushort> ();
@@ -102,9 +102,13 @@ namespace VacuumMold
             }
 
             //
-            // Create the inner element
+            // Triangulate the inner polygon (foreground)
             //
             Poly2Tri.P2T.Triangulate (ipoly);
+
+            //
+            // Create the inner element
+            //
             var ipoints = ipoly.Triangles.SelectMany (x => x.Points).Distinct ().ToList ();
             var ipointToVertex = new Dictionary<uint, ushort> ();
             for (var i = 0; i < ipoints.Count; i++) {
@@ -128,13 +132,48 @@ namespace VacuumMold
             }
 
             //
+            // Create the wall element
+            //
+            var wtris = new List<ushort> ();
+            ushort lastIVert = 0;
+            ushort lastOVert = 0;
+            for (var i = 0; i <= ipoly.Points.Count; i++) {
+                var ip = ipoly.Points[i % ipoly.Points.Count];
+                var ivert = ipointToVertex[ip.VertexCode];
+                var overt = opointToVertex[ip.VertexCode];
+
+                if (i > 0) {
+                    wtris.Add (overt);
+                    wtris.Add (ivert);
+                    wtris.Add (lastOVert);
+
+                    wtris.Add (lastOVert);
+                    wtris.Add (ivert);
+                    wtris.Add (lastIVert);
+                }
+
+                lastIVert = ivert;
+                lastOVert = overt;
+            }
+            SCNGeometryElement welem;
+            unsafe {
+                var ntris = wtris.Count;
+                var atris = wtris.ToArray ();
+                fixed (ushort* ptris = atris) {
+                    var welemData = NSData.FromBytes ((IntPtr)ptris, (nuint)(ntris * 2));
+                    welem = SCNGeometryElement.FromData (welemData, SCNGeometryPrimitiveType.Triangles, ntris / 3, 2);
+                }
+            }
+
+
+            //
             // Create the geometry
             //
             var sources = new[] {
                 SCNGeometrySource.FromVertices (verts.ToArray ()),
             };
             var elements = new[] {
-                oelem, ielem,
+                oelem, ielem, welem,
             };
             var g = SCNGeometry.Create (sources, elements.ToArray ());
 
@@ -142,7 +181,9 @@ namespace VacuumMold
 
             var imat = ForegroundMaterial.SCNMaterial;
 
-            g.Materials = new[] { omat, imat };
+            var wmat = Materials.Gold(roughness: 0.1).SCNMaterial;
+
+            g.Materials = new[] { omat, imat, wmat };
             return g;
         }
     }

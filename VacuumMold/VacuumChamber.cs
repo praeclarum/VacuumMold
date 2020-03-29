@@ -40,7 +40,12 @@ namespace VacuumMold
             var root = scene.RootNode;
             root.AddChildNode (camNode);
             root.AddChildNode (viewsNode);
-            //viewsNode.AddChildNode (SCNNode.FromGeometry (SCNSphere.Create (50)));
+
+            var backgroundGeom = SCNBox.Create (10000, 10000, 10, 0);
+            backgroundGeom.FirstMaterial = Materials.Plastic (Xyzw (0.8, 1, 0.8, 1), roughness: 0.1).SCNMaterial;
+            var backgroundNode = SCNNode.FromGeometry (backgroundGeom);
+            backgroundNode.Position = Xyz (0, 0, -5.01).ToSCNVector3 ();
+            viewsNode.AddChildNode (backgroundNode);
 
             AllowsCameraControl = true;
 
@@ -49,7 +54,7 @@ namespace VacuumMold
             scene.Background.ContentsTransform = SCNMatrix4.CreateRotationX ((float)(Math.PI / 2));
 
             scene.LightingEnvironment.ContentImage = scene.Background.ContentImage;
-            scene.LightingEnvironment.ContentsTransform = scene.Background.ContentsTransform;
+            scene.LightingEnvironment.ContentsTransform = SCNMatrix4.CreateRotationX ((float)(Math.PI / 2));
 
             Scene = scene;
 
