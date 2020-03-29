@@ -13,31 +13,31 @@ namespace VacuumMold
 
     public class Box : Shape
     {
-        public CGRect Frame { get; set; }
-
-        public Box (CGRect frame)
+        public CGSize Size { get; set; }
+        
+        public Box (CGSize frame)
         {
-            Frame = frame;
+            Size = frame;
         }
 
         public override Vector2[] SamplePerimeter (float tolerance)
         {
             return new[] {
-                Xy (Frame.X, Frame.Y),
-                Xy (Frame.X + Frame.Width, Frame.Y),
-                Xy (Frame.X + Frame.Width, Frame.Y + Frame.Height),
-                Xy (Frame.X, Frame.Y + Frame.Height),
+                Xy (0, 0),
+                Xy (0 + Size.Width, 0),
+                Xy (0 + Size.Width, 0 + Size.Height),
+                Xy (0, 0 + Size.Height),
             };
         }
     }
 
     public class Oval : Shape
     {
-        public CGRect Frame { get; set; }
+        public CGSize Size { get; set; }
 
-        public Oval (CGRect frame)
+        public Oval (CGSize size)
         {
-            Frame = frame;
+            Size = size;
         }
 
         public override Vector2[] SamplePerimeter (float tolerance)
@@ -47,10 +47,10 @@ namespace VacuumMold
             var da = enda / n;
             var a = 0.0;
             var r = new Vector2[n];
-            var w2 = Frame.Size.Width / 2;
-            var h2 = Frame.Size.Height / 2;
-            var cx = Frame.X + w2;
-            var cy = Frame.Y + h2;
+            var w2 = Size.Width / 2;
+            var h2 = Size.Height / 2;
+            var cx = 0 + w2;
+            var cy = 0 + h2;
             for (var i = 0; i < n; i++, a += da) {
                 var x = cx + w2 * Math.Cos (a);
                 var y = cy + h2 * Math.Sin (a);
