@@ -15,6 +15,8 @@ namespace VacuumMold
         public static Vector3 Xyz (double x, double y, double z) => new Vector3 ((float)x, (float)y, (float)z);
         public static Vector3 Xyz (Vector2 xy, float z) => new Vector3 (xy.X, xy.Y, z);
 
+        public static Vector4 Xyzw (double x, double y, double z, double w) => new Vector4 ((float)x, (float)y, (float)z, (float)w);
+
         public static Vector3 ToVector3 (this SCNVector3 v) => new Vector3 ((float)v.X, (float)v.Y, (float)v.Z);
         public static SCNVector3 ToSCNVector3 (this Vector3 v) => new SCNVector3 (v.X, v.Y, v.Z);
     }

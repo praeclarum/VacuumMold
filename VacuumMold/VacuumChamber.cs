@@ -20,6 +20,7 @@ namespace VacuumMold
                 ZNear = 1,
                 ZFar = 10000,
                 YFov = 90,
+                WantsHdr = true,
             },
             Position = new SCNVector3 (0, 0, 500),
         };
@@ -39,13 +40,16 @@ namespace VacuumMold
             var root = scene.RootNode;
             root.AddChildNode (camNode);
             root.AddChildNode (viewsNode);
-            viewsNode.AddChildNode (SCNNode.FromGeometry (SCNSphere.Create (50)));
+            //viewsNode.AddChildNode (SCNNode.FromGeometry (SCNSphere.Create (50)));
 
             AllowsCameraControl = true;
 
             scene.Background.ContentImage = new NSImage (
                 NSBundle.MainBundle.PathForResource ("environment", "jpg"));
             scene.Background.ContentsTransform = SCNMatrix4.CreateRotationX ((float)(Math.PI / 2));
+
+            scene.LightingEnvironment.ContentImage = scene.Background.ContentImage;
+            scene.LightingEnvironment.ContentsTransform = scene.Background.ContentsTransform;
 
             Scene = scene;
 

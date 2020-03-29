@@ -18,6 +18,12 @@ namespace VacuumMold
 
         private Shape? shape;
 
+        private Material backgroundMaterial = Materials.Plastic (Xyzw (1.0, 1.0, 1.0, 1), roughness: 0.1);
+        public Material BackgroundMaterial {
+            get => backgroundMaterial;
+            set => backgroundMaterial = value; }
+        public Material ForegroundMaterial { get; set; } = Materials.Silver (roughness: 0.0);
+
         public Shape? Shape {
             get => shape;
             set {
@@ -131,10 +137,11 @@ namespace VacuumMold
                 oelem, ielem,
             };
             var g = SCNGeometry.Create (sources, elements.ToArray ());
-            var omat = SCNMaterial.Create ();
-            omat.Diffuse.ContentColor = NSColor.Red;
-            var imat = SCNMaterial.Create ();
-            imat.Diffuse.ContentColor = NSColor.Green;
+
+            var omat = BackgroundMaterial.SCNMaterial;
+
+            var imat = ForegroundMaterial.SCNMaterial;
+
             g.Materials = new[] { omat, imat };
             return g;
         }

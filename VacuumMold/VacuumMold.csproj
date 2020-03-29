@@ -66,6 +66,7 @@
     <Compile Include="Shape.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="View.cs" />
+    <Compile Include="Material.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Poly2Tri.NetStandard">
